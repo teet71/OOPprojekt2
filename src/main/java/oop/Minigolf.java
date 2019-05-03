@@ -136,10 +136,10 @@ public class Minigolf extends Application {
 
                         public void handle(long now) {
                             double count = 0;
-                            mainLoop: while (count<10){
+                            mainLoop: while (count<20){
                             if (Math.abs(pall.getCenterX()-auk.getCenterX())<12&&Math.abs(pall.getCenterY()-auk.getCenterY())<12){
-                                pall.setKiirus_x(pall.getKiirus_x()+0.005*(auk.getCenterX()-pall.getCenterX()));
-                                pall.setKiirus_y(pall.getKiirus_y()+0.005*(auk.getCenterY()-pall.getCenterY()));
+                                pall.setKiirus_x(pall.getKiirus_x()+0.001*(auk.getCenterX()-pall.getCenterX()));
+                                pall.setKiirus_y(pall.getKiirus_y()+0.001*(auk.getCenterY()-pall.getCenterY()));
                                 if (Math.abs(pall.getCenterX()-auk.getCenterX())<1&&Math.abs(pall.getCenterY()-auk.getCenterY())<1){
                                     this.stop();
                                     pall.setRadius(6);
@@ -154,8 +154,8 @@ public class Minigolf extends Application {
                             y = Math.max(5,y);
 
                             count++;
-                                pall.setCenterY(pall.getCenterY()+(pall.getKiirus_y()*0.1));
-                                pall.setCenterX(pall.getCenterX()+(pall.getKiirus_x()*0.1));
+                                pall.setCenterY(pall.getCenterY()+(pall.getKiirus_y()*0.05));
+                                pall.setCenterX(pall.getCenterX()+(pall.getKiirus_x()*0.05));
                                 for (int i = x-5; i < x+5; i++) {
                                     for (int j = y-5; j < y+5; j++) {
                                     if (mänguväli[j][i].getFill().equals(Color.GRAY)){
@@ -201,12 +201,12 @@ public class Minigolf extends Application {
                             y = Math.min(99,y);
                             y = Math.max(0,y);
                             if (mänguväli[y][x].getFill().equals(Color.GREEN)) {
-                                pall.setKiirus_x((pall.getKiirus_x() * 0.995));
-                                pall.setKiirus_y((pall.getKiirus_y() * 0.995));
+                                pall.setKiirus_x((pall.getKiirus_x() * 0.999));
+                                pall.setKiirus_y((pall.getKiirus_y() * 0.999));
                             }
                             else if (mänguväli[y][x].getFill().equals(Color.YELLOW)) {
-                                pall.setKiirus_x((pall.getKiirus_x() * 0.98));
-                                pall.setKiirus_y((pall.getKiirus_y() * 0.98));
+                                pall.setKiirus_x((pall.getKiirus_x() * 0.995));
+                                pall.setKiirus_y((pall.getKiirus_y() * 0.995));
                             }
                             else if (mänguväli[y][x].getFill().equals(Color.BLUE)) {
                                 pall.setKiirus_x(0);
