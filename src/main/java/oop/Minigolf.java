@@ -5,6 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -66,6 +67,32 @@ public class Minigolf extends Application {
             bw.write(algus[0]+" "+algus[1]+" "+lõpp[0]+" "+lõpp[1]);
         }
     }
+    public static Pall failistPall(String rada) throws  Exception{
+        Pall pall;
+        try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
+            int rida_arv = 0;
+            while (rida_arv<100) {
+                sc.nextLine();
+                rida_arv++;
+            }
+            String[] rida = sc.nextLine().split(" ");
+            pall = new Pall(Integer.parseInt(rida[0])*6.0, Integer.parseInt(rida[1])*6.0, 3, Color.WHITE);
+        }
+        return pall;
+    }
+    public static Circle failistAuk(String rada) throws Exception{
+        Circle auk;
+        try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
+            int rida_arv = 0;
+            while (rida_arv<100) {
+                sc.nextLine();
+                rida_arv++;
+            }
+            String[] rida = sc.nextLine().split(" ");
+            auk = new Circle(Integer.parseInt(rida[2])*6.0, Integer.parseInt(rida[3])*6.0, 3, Color.BLACK);
+        }
+        return auk;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -79,6 +106,9 @@ public class Minigolf extends Application {
                 juur.getChildren().get(juur.getChildren().size()-1).setTranslateY(6*i);
             }
         }
+        Pall pall = failistPall("test");
+        Circle auk = failistAuk("test");
+        juur.getChildren().addAll(pall, auk);
         Scene peaSteen = new Scene(juur, 600, 600, Color.BLUE);
         primaryStage.setScene(peaSteen);
         primaryStage.show();
