@@ -12,5 +12,19 @@ public class Pall extends Circle {
         this.kiirus_y = 0;
     }
 
+    public void setKiirus_x(double kiirus_x) {
+        this.kiirus_x = kiirus_x;
+    }
 
+    public void setKiirus_y(double kiirus_y) {
+        this.kiirus_y = kiirus_y;
+    }
+
+    public double getKiirus_x() {
+        return kiirus_x;
+    }
+
+    public double getKiirus_y() {
+        return kiirus_y;
+    }
 }
