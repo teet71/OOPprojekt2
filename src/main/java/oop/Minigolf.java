@@ -127,36 +127,37 @@ public class Minigolf extends Application {
                     double[] sihtmärk = {event.getSceneX(), event.getSceneY()};
                     pall.setKiirus_x(sihtmärk[0] - pall.getCenterX());
                     pall.setKiirus_y(sihtmärk[1] - pall.getCenterY());
-                    System.out.println(saabvajutada.isaBoolean());
-
                     AnimationTimer timer = new AnimationTimer() {
                         @Override
 
                         public void handle(long now) {
+                            if (Math.abs(pall.getCenterX()-auk.getCenterX())<10&&Math.abs(pall.getCenterY()-auk.getCenterY())<10){
+                                pall.setKiirus_x(pall.getKiirus_x()+0.5*(auk.getCenterX()-pall.getCenterX()));
+                                pall.setKiirus_y(pall.getKiirus_y()+0.5*(auk.getCenterY()-pall.getCenterY()));
+                                if (Math.abs(pall.getCenterX()-auk.getCenterX())<1&&Math.abs(pall.getCenterY()-auk.getCenterY())<1){
+                                    this.stop();
+                                }
+                            }
                             pall.setCenterY(pall.getCenterY() + pall.getKiirus_y() * 0.05);
                             pall.setCenterX(pall.getCenterX() + pall.getKiirus_x() * 0.05);
                             int x = (int) Math.round(pall.getCenterX() / 6);
                             int y = (int) Math.round(pall.getCenterY() / 6);
                             if (mänguväli[y][x].getFill().equals(Color.GREEN)) {
-                                System.out.println("roheline");
                                 pall.setKiirus_x((pall.getKiirus_x() * 0.96));
                                 pall.setKiirus_y((pall.getKiirus_y() * 0.96));
-                                if (Math.abs(pall.getKiirus_y()) < 0.1) pall.setKiirus_y(0);
-                                if (Math.abs(pall.getKiirus_x()) < 0.1) pall.setKiirus_x(0);
+                                if (Math.abs(pall.getKiirus_y()) < 0.2) pall.setKiirus_y(0);
+                                if (Math.abs(pall.getKiirus_x()) < 0.2) pall.setKiirus_x(0);
                                 if (pall.getKiirus_y() == 0 && pall.getKiirus_x() == 0) {
-                                    System.out.println("nullitud");
                                     saabvajutada.setaBoolean(true);
                                     this.stop();
                                 }
                             }
                             else if (mänguväli[y][x].getFill().equals(Color.YELLOW)) {
-                                System.out.println("liiv");
                                 pall.setKiirus_x((pall.getKiirus_x() * 0.85));
                                 pall.setKiirus_y((pall.getKiirus_y() * 0.85));
                                 if (Math.abs(pall.getKiirus_y()) < 0.1) pall.setKiirus_y(0);
                                 if (Math.abs(pall.getKiirus_x()) < 0.1) pall.setKiirus_x(0);
                                 if (pall.getKiirus_y() == 0 && pall.getKiirus_x() == 0) {
-                                    System.out.println("nullitud");
                                     saabvajutada.setaBoolean(true);
                                     this.stop();
                                 }
