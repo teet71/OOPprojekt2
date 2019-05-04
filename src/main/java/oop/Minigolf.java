@@ -1,6 +1,8 @@
 package oop;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -17,6 +19,7 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -112,6 +115,7 @@ public class Minigolf extends Application {
 
     public static Scene mänguStseen(String rada, Stage primaryStage, Scene peamenüü) throws Exception{
         Switch saabvajutada = new Switch();
+        Switch pallvees = new Switch();
         Group juur = new Group();
         Rectangle[][] mänguväli = failMänguväljaks("test");
         for (int i = 0; i < mänguväli.length; i++) {
@@ -130,6 +134,7 @@ public class Minigolf extends Application {
             public void handle(MouseEvent event) {
                 if (saabvajutada.isaBoolean()) {
                     saabvajutada.setaBoolean(false);
+                    pallvees.setaBoolean(false);
                     double[] alguspunkt = {pall.getCenterX(), pall.getCenterY()};
                     double[] sihtmärk = {event.getSceneX(), event.getSceneY()};
                     pall.setKiirus_x(0.05*(sihtmärk[0] - pall.getCenterX()));
@@ -140,6 +145,19 @@ public class Minigolf extends Application {
                         public void handle(long now) {
                             double count = 0;
                             mainLoop: while (count<20){
+                                if (pallvees.isaBoolean()){
+                                    pall.setRadius(Math.max(0.0,pall.getRadius()-0.2));
+                                    count=20;
+                                    if (pall.getRadius()==0){
+                                        pall.setRadius(8);
+                                        pall.setCenterY(alguspunkt[1]);
+                                        pall.setCenterX(alguspunkt[0]);
+                                        pallvees.setaBoolean(false);
+                                        saabvajutada.setaBoolean(true);
+                                        this.stop();
+                                    }
+                                }
+                                else {
                                 if (Math.abs(pall.getCenterX()-auk.getCenterX())<12&&Math.abs(pall.getCenterY()-auk.getCenterY())<12){
                                     pall.setKiirus_x(pall.getKiirus_x()+0.001*(auk.getCenterX()-pall.getCenterX()));
                                     pall.setKiirus_y(pall.getKiirus_y()+0.001*(auk.getCenterY()-pall.getCenterY()));
@@ -214,18 +232,17 @@ public class Minigolf extends Application {
                                 else if (mänguväli[y][x].getFill().equals(Color.BLUE)) {
                                     pall.setKiirus_x(0);
                                     pall.setKiirus_y(0);
-                                    pall.setCenterX(alguspunkt[0]);
-                                    pall.setCenterY(alguspunkt[1]);
-                                    saabvajutada.setaBoolean(true);
-                                    this.stop();
+                                    pallvees.setaBoolean(true);
+                                    break;
                                 }
-                                if (Math.abs(pall.getKiirus_y())+Math.abs(pall.getKiirus_x()) < 0.01) {
+                                if (Math.abs(pall.getKiirus_y())+Math.abs(pall.getKiirus_x()) < 0.03 && !pallvees.isaBoolean()) {
                                     pall.setKiirus_y(0);
                                     pall.setKiirus_x(0);
                                     saabvajutada.setaBoolean(true);
                                     this.stop();
+                                    break;
                                 }
-                            }
+                            }}
 
 
                         }};
@@ -403,20 +420,6 @@ public class Minigolf extends Application {
     }
 
     public static void main(String[] args) throws Exception {
-        Rectangle[][] test = new Rectangle[100][100];
-        for (int i = 0; i < test.length; i++) {
-            for (int j = 0; j < test[i].length; j++) {
-                if (i<55&&i>45&&j>45&&j<55) test[i][j] = new Rectangle(6, 6, Color.GRAY);
-                else if (i==20||i==80||j==20||j==80) test[i][j] = new Rectangle(6, 6, Color.GRAY);
-                else if (i>35&&i<65&&j > 20 && j < 80) test[i][j] = new Rectangle(6, 6, Color.YELLOW);
-                else if (j > 20 && j < 80 && i > 20 && i < 80) test[i][j] = new Rectangle(6, 6, Color.GREEN);
-                else test[i][j] = new Rectangle(6, 6, Color.BLUE);
-            }
-
-        }
-        int[] algus = {50, 75};
-        int[] lõpp = {50, 25};
-        radaFailiks("test", test, algus, lõpp);
         launch(args);
 
     }
