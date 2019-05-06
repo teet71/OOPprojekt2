@@ -1,5 +1,6 @@
 package oop;
 
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
@@ -32,7 +33,7 @@ public class Minigolf extends Application {
             int rida_arv = 0;
             while (rida_arv < 100) {
                 String rida = sc.nextLine();
-                if (rida.length()!=100) throw new ViganeRadaException("Leidus vigane rida", rida_arv);
+                if (rida.length() != 100) throw new ViganeRadaException("Leidus vigane rida", rida_arv);
                 for (int i = 0; i < rida.length(); i++) {
                     switch (rida.charAt(i)) {
                         case '#': {
@@ -51,7 +52,11 @@ public class Minigolf extends Application {
                             tagatis[rida_arv][i] = new Rectangle(6, 6, Color.GREEN);
                             break;
                         }
-                        default:{
+                        case 'J': {
+                            tagatis[rida_arv][i] = new Rectangle(6, 6, Color.LIGHTBLUE);
+                            break;
+                        }
+                        default: {
                             throw new ViganeRadaException("Leidus vigane rida", rida_arv);
                         }
                     }
@@ -73,16 +78,21 @@ public class Minigolf extends Application {
                         rida.append('O');
                     } else if (mänguväljak[i][j].getFill() == Color.YELLOW) {
                         rida.append('S');
+                    } else if (mänguväljak[i][j].getFill() == Color.LIGHTBLUE) {
+                        rida.append('J');
                     }
+
                     if (mänguväljak[i][j].getFill() == Color.GREEN) {
                         rida.append('%');
                     }
+
                 }
                 bw.write(rida.toString());
                 bw.newLine();
             }
             bw.write(algus[0] + " " + algus[1] + " " + lõpp[0] + " " + lõpp[1]);
         }
+
     }
 
     public static Pall failistPall(String rada) throws Exception {
@@ -113,7 +123,7 @@ public class Minigolf extends Application {
         return auk;
     }
 
-    public static Scene mänguStseen(String rada, Stage primaryStage, Scene peamenüü) throws Exception{
+    public static Scene mänguStseen(String rada, Stage primaryStage, Scene peamenüü) throws Exception {
         Switch saabvajutada = new Switch();
         Switch pallvees = new Switch();
         Group juur = new Group();
@@ -137,18 +147,19 @@ public class Minigolf extends Application {
                     pallvees.setaBoolean(false);
                     double[] alguspunkt = {pall.getCenterX(), pall.getCenterY()};
                     double[] sihtmärk = {event.getSceneX(), event.getSceneY()};
-                    pall.setKiirus_x(0.05*(sihtmärk[0] - pall.getCenterX()));
-                    pall.setKiirus_y(0.05*(sihtmärk[1] - pall.getCenterY()));
+                    pall.setKiirus_x(0.05 * (sihtmärk[0] - pall.getCenterX()));
+                    pall.setKiirus_y(0.05 * (sihtmärk[1] - pall.getCenterY()));
                     AnimationTimer timer = new AnimationTimer() {
                         @Override
 
                         public void handle(long now) {
                             double count = 0;
-                            mainLoop: while (count<20){
-                                if (pallvees.isaBoolean()){
-                                    pall.setRadius(Math.max(0.0,pall.getRadius()-0.2));
-                                    count=20;
-                                    if (pall.getRadius()==0){
+                            mainLoop:
+                            while (count < 20) {
+                                if (pallvees.isaBoolean()) {
+                                    pall.setRadius(Math.max(0.0, pall.getRadius() - 0.2));
+                                    count = 20;
+                                    if (pall.getRadius() == 0) {
                                         pall.setRadius(8);
                                         pall.setCenterY(alguspunkt[1]);
                                         pall.setCenterX(alguspunkt[0]);
@@ -156,96 +167,98 @@ public class Minigolf extends Application {
                                         saabvajutada.setaBoolean(true);
                                         this.stop();
                                     }
-                                }
-                                else {
-                                if (Math.abs(pall.getCenterX()-auk.getCenterX())<12&&Math.abs(pall.getCenterY()-auk.getCenterY())<12){
-                                    pall.setKiirus_x(pall.getKiirus_x()+0.001*(auk.getCenterX()-pall.getCenterX()));
-                                    pall.setKiirus_y(pall.getKiirus_y()+0.001*(auk.getCenterY()-pall.getCenterY()));
-                                    if (Math.abs(pall.getCenterX()-auk.getCenterX())<1&&Math.abs(pall.getCenterY()-auk.getCenterY())<1){
+                                } else {
+                                    if (Math.abs(pall.getCenterX() - auk.getCenterX()) < 12 && Math.abs(pall.getCenterY() - auk.getCenterY()) < 12) {
+                                        pall.setKiirus_x(pall.getKiirus_x() + 0.001 * (auk.getCenterX() - pall.getCenterX()));
+                                        pall.setKiirus_y(pall.getKiirus_y() + 0.001 * (auk.getCenterY() - pall.getCenterY()));
+                                        if (Math.abs(pall.getCenterX() - auk.getCenterX()) < 1 && Math.abs(pall.getCenterY() - auk.getCenterY()) < 1) {
+                                            this.stop();
+                                            pall.setRadius(6);
+                                            primaryStage.setScene(peamenüü);
+                                            //kui on augus!
+                                        }
+                                    }
+                                    int x = (int) Math.round((pall.getCenterX() - 3) / 6);
+                                    int y = (int) Math.round(pall.getCenterY() / 6);
+                                    x = Math.min(95, x);
+                                    x = Math.max(5, x);
+                                    y = Math.min(95, y);
+                                    y = Math.max(5, y);
+
+                                    count++;
+                                    pall.setCenterY(pall.getCenterY() + (pall.getKiirus_y() * 0.05));
+                                    pall.setCenterX(pall.getCenterX() + (pall.getKiirus_x() * 0.05));
+                                    for (int i = x - 5; i < x + 5; i++) {
+                                        for (int j = y - 5; j < y + 5; j++) {
+                                            if (mänguväli[j][i].getFill().equals(Color.GRAY)) {
+                                                if (mänguväli[j][i].getBoundsInParent().intersects(pall.getBoundsInParent())) {
+                                                    double angle;
+                                                    double[] keskloik = new double[2];
+                                                    keskloik[0] = mänguväli[j][i].getTranslateX() + 3 - (pall.getCenterX());
+                                                    keskloik[1] = -(mänguväli[j][i].getTranslateY() + 3) + (pall.getCenterY());
+                                                    if (keskloik[0] >= 0) {
+                                                        if (keskloik[1] >= 0) {
+                                                            angle = 90 - Math.toDegrees(Math.atan(keskloik[1] / keskloik[0]));
+
+                                                        } else {
+                                                            angle = 90 + Math.toDegrees(Math.atan(Math.abs(keskloik[1]) / keskloik[0]));
+                                                        }
+                                                    } else {
+                                                        if (keskloik[1] >= 0) {
+                                                            angle = 360 - Math.toDegrees(Math.atan(Math.abs(keskloik[0]) / keskloik[1]));
+
+                                                        } else {
+                                                            angle = 180 + Math.toDegrees(Math.atan(Math.abs(Math.abs(keskloik[0]) / keskloik[1])));
+                                                        }
+                                                    }
+                                                    if (angle < 45.0 || angle > 315.0 || ((angle > 135) && (angle < 225))) {
+                                                        pall.setKiirus_y(-pall.getKiirus_y() * 0.8);
+                                                        pall.setCenterY(pall.getCenterY() + (0.1 * pall.getKiirus_y()));
+                                                        pall.setCenterX(pall.getCenterX() - (0.1 * pall.getKiirus_x()));
+                                                    } else {
+                                                        pall.setKiirus_x(-pall.getKiirus_x() * 0.8);
+                                                        pall.setCenterX(pall.getCenterX() + (0.1 * pall.getKiirus_x()));
+                                                        pall.setCenterY(pall.getCenterY() - (0.1 * pall.getKiirus_y()));
+                                                    }
+                                                    break mainLoop;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    x = (int) Math.round((pall.getCenterX() - 3) / 6);
+                                    y = (int) Math.round(pall.getCenterY() / 6);
+                                    x = Math.min(99, x);
+                                    x = Math.max(0, x);
+                                    y = Math.min(99, y);
+                                    y = Math.max(0, y);
+                                    if (mänguväli[y][x].getFill().equals(Color.GREEN)) {
+                                        pall.setKiirus_x((pall.getKiirus_x() * 0.999));
+                                        pall.setKiirus_y((pall.getKiirus_y() * 0.999));
+                                    } else if (mänguväli[y][x].getFill().equals(Color.YELLOW)) {
+                                        pall.setKiirus_x((pall.getKiirus_x() * 0.995));
+                                        pall.setKiirus_y((pall.getKiirus_y() * 0.995));
+                                    } else if (mänguväli[y][x].getFill().equals(Color.LIGHTBLUE)) {
+                                        pall.setKiirus_x((pall.getKiirus_x() * 1.002));
+                                        pall.setKiirus_y((pall.getKiirus_y() * 1.002));
+                                    } else if (mänguväli[y][x].getFill().equals(Color.BLUE)) {
+                                        pall.setKiirus_x(0);
+                                        pall.setKiirus_y(0);
+                                        pallvees.setaBoolean(true);
+                                        break;
+                                    }
+                                    if (Math.abs(pall.getKiirus_y()) + Math.abs(pall.getKiirus_x()) < 0.03 && !pallvees.isaBoolean()) {
+                                        pall.setKiirus_y(0);
+                                        pall.setKiirus_x(0);
+                                        saabvajutada.setaBoolean(true);
                                         this.stop();
-                                        pall.setRadius(6);
-                                        primaryStage.setScene(peamenüü);
-                                        //kui on augus!
+                                        break;
                                     }
                                 }
-                                int x = (int) Math.round((pall.getCenterX()-3) / 6);
-                                int y = (int) Math.round(pall.getCenterY() / 6);
-                                x = Math.min(95,x);
-                                x = Math.max(5,x);
-                                y = Math.min(95,y);
-                                y = Math.max(5,y);
-
-                                count++;
-                                pall.setCenterY(pall.getCenterY()+(pall.getKiirus_y()*0.05));
-                                pall.setCenterX(pall.getCenterX()+(pall.getKiirus_x()*0.05));
-                                for (int i = x-5; i < x+5; i++) {
-                                    for (int j = y-5; j < y+5; j++) {
-                                        if (mänguväli[j][i].getFill().equals(Color.GRAY)){
-                                            if (mänguväli[j][i].getBoundsInParent().intersects(pall.getBoundsInParent())){
-                                                double angle;
-                                                double[] keskloik = new double[2];
-                                                keskloik[0] =  mänguväli[j][i].getTranslateX()+3 - (pall.getCenterX());
-                                                keskloik[1] = -(mänguväli[j][i].getTranslateY()+3)+(pall.getCenterY());
-                                                if (keskloik[0] >= 0){
-                                                    if (keskloik[1] >= 0){
-                                                        angle = 90 - Math.toDegrees(Math.atan(keskloik[1]/keskloik[0]));
-
-                                                    }
-                                                    else {
-                                                        angle = 90 + Math.toDegrees(Math.atan(Math.abs(keskloik[1])/keskloik[0]));
-                                                    }}
-                                                else {
-                                                    if (keskloik[1] >= 0){
-                                                        angle = 360 - Math.toDegrees(Math.atan(Math.abs(keskloik[0])/keskloik[1]));
-
-                                                    }
-                                                    else {
-                                                        angle = 180 + Math.toDegrees(Math.atan(Math.abs(Math.abs(keskloik[0])/keskloik[1])));
-                                                    }
-                                                }
-                                                if (angle<45.0||angle>315.0||((angle>135)&&(angle<225))){
-                                                    pall.setKiirus_y(-pall.getKiirus_y()*0.8);
-                                                    pall.setCenterY(pall.getCenterY()+(0.1*pall.getKiirus_y()));
-                                                    pall.setCenterX(pall.getCenterX()-(0.1*pall.getKiirus_x()));
-                                                }
-                                                else  {
-                                                    pall.setKiirus_x(-pall.getKiirus_x()*0.8);
-                                                    pall.setCenterX(pall.getCenterX()+(0.1*pall.getKiirus_x()));
-                                                    pall.setCenterY(pall.getCenterY()-(0.1*pall.getKiirus_y()));
-                                                }
-                                                break mainLoop;}
-                                        }}}
-                                x = (int) Math.round((pall.getCenterX()-3) / 6);
-                                y = (int) Math.round(pall.getCenterY() / 6);
-                                x = Math.min(99,x);
-                                x = Math.max(0,x);
-                                y = Math.min(99,y);
-                                y = Math.max(0,y);
-                                if (mänguväli[y][x].getFill().equals(Color.GREEN)) {
-                                    pall.setKiirus_x((pall.getKiirus_x() * 0.999));
-                                    pall.setKiirus_y((pall.getKiirus_y() * 0.999));
-                                }
-                                else if (mänguväli[y][x].getFill().equals(Color.YELLOW)) {
-                                    pall.setKiirus_x((pall.getKiirus_x() * 0.995));
-                                    pall.setKiirus_y((pall.getKiirus_y() * 0.995));
-                                }
-                                else if (mänguväli[y][x].getFill().equals(Color.BLUE)) {
-                                    pall.setKiirus_x(0);
-                                    pall.setKiirus_y(0);
-                                    pallvees.setaBoolean(true);
-                                    break;
-                                }
-                                if (Math.abs(pall.getKiirus_y())+Math.abs(pall.getKiirus_x()) < 0.03 && !pallvees.isaBoolean()) {
-                                    pall.setKiirus_y(0);
-                                    pall.setKiirus_x(0);
-                                    saabvajutada.setaBoolean(true);
-                                    this.stop();
-                                    break;
-                                }
-                            }}
+                            }
 
 
-                        }};
+                        }
+                    };
                     timer.start();
                 }
 
@@ -255,7 +268,7 @@ public class Minigolf extends Application {
         return mängimisSteen;
     }
 
-    public static Scene mapEditorStseen(Stage primaryStage, Scene peamenüü) throws Exception{
+    public static Scene mapEditorStseen(Stage primaryStage, Scene peamenüü) throws Exception {
         Circle lõppauk = new Circle(0, Color.BLACK);
         Text alguspunkt = new Text("P");
         alguspunkt.setFont(new Font(10));
@@ -281,6 +294,15 @@ public class Minigolf extends Application {
                 pintsel.setRadius(0);
             }
         });
+        Button jää = new Button("jää");
+        jää.setTranslateX(10);
+        jää.setTranslateY(610);
+        jää.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent mouseEvent) {
+                pintsel.setFill(Color.LIGHTBLUE);
+                pintsel.setRadius(0);
+            }
+        });
         Button muru = new Button("muru");
         muru.setTranslateX(200);
         muru.setTranslateY(610);
@@ -293,20 +315,14 @@ public class Minigolf extends Application {
         Button sein = new Button("sein");
         sein.setTranslateX(250);
         sein.setTranslateY(610);
-        sein.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent mouseEvent) {
-                pintsel.setFill(Color.GRAY);
-                pintsel.setRadius(0);
-            }
+        sein.setOnMouseClicked(mouseEvent -> {
+            pintsel.setFill(Color.GRAY);
+            pintsel.setRadius(0);
         });
         Button auk = new Button("auk");
         auk.setTranslateX(300);
         auk.setTranslateY(610);
-        auk.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent mouseEvent) {
-                pintsel.setRadius(1);
-            }
-        });
+        auk.setOnMouseClicked(mouseEvent -> pintsel.setRadius(1));
         Button algus = new Button("algus");
         algus.setTranslateX(350);
         algus.setTranslateY(610);
@@ -320,14 +336,17 @@ public class Minigolf extends Application {
         finish.setTranslateY(610);
         finish.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent mouseEvent) {
-                int[] aukkord = {(int) Math.round(lõppauk.getCenterX()/6), (int) Math.round(lõppauk.getCenterY()/6)};
-                int[] alguskord = {(int) Math.round(alguspunkt.getX()/6), (int) Math.round(alguspunkt.getY()/6)};
-                try {radaFailiks("test", test, alguskord, aukkord);}
-                catch (Exception e) {primaryStage.close();}
+                int[] aukkord = {(int) Math.round(lõppauk.getCenterX() / 6), (int) Math.round(lõppauk.getCenterY() / 6)};
+                int[] alguskord = {(int) Math.round(alguspunkt.getX() / 6), (int) Math.round(alguspunkt.getY() / 6)};
+                try {
+                    radaFailiks("test", test, alguskord, aukkord);
+                } catch (Exception e) {
+                    primaryStage.close();
+                }
                 primaryStage.setScene(peamenüü);
             }
         });
-        juur.getChildren().addAll(vesi,liiv,muru,sein);
+        juur.getChildren().addAll(vesi, liiv, muru, sein, jää);
         for (int i = 0; i < test.length; i++) {
             for (int j = 0; j < test[i].length; j++) {
                 test[i][j] = new Rectangle(6, 6, Color.BLUE);
@@ -340,16 +359,16 @@ public class Minigolf extends Application {
                 juur.getChildren().get(juur.getChildren().size() - 1).setTranslateY(6 * i);
             }
         }
-        juur.getChildren().addAll(auk,algus, finish);
-        juur.getChildren().addAll(lõppauk,alguspunkt);
+        juur.getChildren().addAll(auk, algus, finish);
+        juur.getChildren().addAll(lõppauk, alguspunkt);
         Scene radaloomissteen = new Scene(juur, 600, 650, Color.SNOW);
         radaloomissteen.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                int x = (int) Math.round(event.getSceneX()/6);
-                int y = (int) Math.round(event.getSceneY()/6);
-                if (y<100){
-                    if (pintsel.getRadius()==0) {
+                int x = (int) Math.round(event.getSceneX() / 6);
+                int y = (int) Math.round(event.getSceneY() / 6);
+                if (y < 100) {
+                    if (pintsel.getRadius() == 0) {
                         for (int i = Math.max(0, x - 1); i < Math.min(100, x + 1); i++) {
                             for (int j = Math.max(0, y - 1); j < Math.min(100, y + 1); j++) {
                                 test[j][i].setFill(pintsel.getFill());
@@ -362,39 +381,37 @@ public class Minigolf extends Application {
         radaloomissteen.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                int x = (int) Math.round(event.getSceneX()/6);
-                int y = (int) Math.round(event.getSceneY()/6);
-                    if (pintsel.getRadius()==2){
-                        alguspunkt.setText("S");
-                        alguspunkt.setX(x*6);
-                        alguspunkt.setY(y*6);
-                    }
-                    else if (pintsel.getRadius()==1) {
-                        lõppauk.setRadius(10);
-                        lõppauk.setCenterX(x*6);
-                        lõppauk.setCenterY(y*6);
-                    }
-                    else if (pintsel.getRadius()==0) {
+                int x = (int) Math.round(event.getSceneX() / 6);
+                int y = (int) Math.round(event.getSceneY() / 6);
+                if (pintsel.getRadius() == 2) {
+                    alguspunkt.setText("S");
+                    alguspunkt.setX(x * 6);
+                    alguspunkt.setY(y * 6);
+                } else if (pintsel.getRadius() == 1) {
+                    lõppauk.setRadius(10);
+                    lõppauk.setCenterX(x * 6);
+                    lõppauk.setCenterY(y * 6);
+                } else if (pintsel.getRadius() == 0) {
                     for (int i = Math.max(0, x - 1); i < Math.min(100, x + 1); i++) {
                         for (int j = Math.max(0, y - 1); j < Math.min(100, y + 1); j++) {
                             test[j][i].setFill(pintsel.getFill());
                         }
                     }
                 }
-                }
-            });
+            }
+        });
 
         return radaloomissteen;
     }
 
-    public static Scene menüüStseen(Stage primaryStage) throws Exception{
+    public static Scene menüüStseen(Stage primaryStage) throws Exception {
         Group juur = new Group();
         Button play = new Button("Mängi");
-        play.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent mouseEvent) {
-                try {primaryStage.setScene(mänguStseen("test",primaryStage, primaryStage.getScene()));}
-                catch (Exception e) {
-                    primaryStage.close();}
+        play.setOnMouseClicked(mouseEvent -> {
+            try {
+                primaryStage.setScene(mänguStseen("test", primaryStage, primaryStage.getScene()));
+            } catch (Exception e) {
+                primaryStage.close();
             }
         });
         juur.getChildren().add(play);
@@ -402,9 +419,11 @@ public class Minigolf extends Application {
         ehita.setTranslateX(300);
         ehita.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent mouseEvent) {
-                try {primaryStage.setScene(mapEditorStseen(primaryStage, primaryStage.getScene()));}
-                catch (Exception e) {
-                    primaryStage.close();}
+                try {
+                    primaryStage.setScene(mapEditorStseen(primaryStage, primaryStage.getScene()));
+                } catch (Exception e) {
+                    primaryStage.close();
+                }
             }
         });
         juur.getChildren().add(ehita);
