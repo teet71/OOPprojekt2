@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -296,13 +297,16 @@ public class Minigolf extends Application {
     public static Scene mapEditorStseen(Stage primaryStage, Scene peamenüü) throws Exception {
         Circle lõppauk = new Circle(0, Color.BLACK);
         Text alguspunkt = new Text("P");
+        TextField nimi = new TextField();
+        nimi.setTranslateX(450);
+        nimi.setTranslateY(610);
         alguspunkt.setFont(new Font(10));
         alguspunkt.setFill(Color.RED);
         Circle pintsel = new Circle(0, Color.GREEN);
         Group juur = new Group();
         Rectangle[][] test = new Rectangle[100][100];
         Button vesi = new Button("vesi");
-        vesi.setTranslateX(100);
+        vesi.setTranslateX(60);
         vesi.setTranslateY(610);
         vesi.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent mouseEvent) {
@@ -311,7 +315,7 @@ public class Minigolf extends Application {
             }
         });
         Button liiv = new Button("liiv");
-        liiv.setTranslateX(150);
+        liiv.setTranslateX(110);
         liiv.setTranslateY(610);
         liiv.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent mouseEvent) {
@@ -329,7 +333,7 @@ public class Minigolf extends Application {
             }
         });
         Button muru = new Button("muru");
-        muru.setTranslateX(200);
+        muru.setTranslateX(160);
         muru.setTranslateY(610);
         muru.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent mouseEvent) {
@@ -338,18 +342,18 @@ public class Minigolf extends Application {
             }
         });
         Button sein = new Button("sein");
-        sein.setTranslateX(250);
+        sein.setTranslateX(210);
         sein.setTranslateY(610);
         sein.setOnMouseClicked(mouseEvent -> {
             pintsel.setFill(Color.GRAY);
             pintsel.setRadius(0);
         });
         Button auk = new Button("auk");
-        auk.setTranslateX(300);
+        auk.setTranslateX(260);
         auk.setTranslateY(610);
         auk.setOnMouseClicked(mouseEvent -> pintsel.setRadius(1));
         Button algus = new Button("algus");
-        algus.setTranslateX(350);
+        algus.setTranslateX(310);
         algus.setTranslateY(610);
         algus.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent mouseEvent) {
@@ -357,14 +361,14 @@ public class Minigolf extends Application {
             }
         });
         Button finish = new Button("finish");
-        finish.setTranslateX(450);
+        finish.setTranslateX(360);
         finish.setTranslateY(610);
         finish.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent mouseEvent) {
                 int[] aukkord = {(int) Math.round(lõppauk.getCenterX() / 6), (int) Math.round(lõppauk.getCenterY() / 6)};
                 int[] alguskord = {(int) Math.round(alguspunkt.getX() / 6), (int) Math.round(alguspunkt.getY() / 6)};
                 try {
-                    radaFailiks(test, alguskord, aukkord, "test");
+                    radaFailiks(test, alguskord, aukkord, nimi.getText());
                 } catch (Exception e) {
                     primaryStage.close();
                 }
@@ -384,7 +388,7 @@ public class Minigolf extends Application {
                 juur.getChildren().get(juur.getChildren().size() - 1).setTranslateY(6 * i);
             }
         }
-        juur.getChildren().addAll(auk, algus, finish);
+        juur.getChildren().addAll(auk, algus, finish, nimi);
         juur.getChildren().addAll(lõppauk, alguspunkt);
         Scene radaloomissteen = new Scene(juur, 600, 650, Color.SNOW);
         radaloomissteen.setOnMouseDragged(new EventHandler<MouseEvent>() {
