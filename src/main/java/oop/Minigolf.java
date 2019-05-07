@@ -2,28 +2,23 @@ package oop;
 
 
 import javafx.animation.AnimationTimer;
-import javafx.animation.ScaleTransition;
-import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Minigolf extends Application {
@@ -68,6 +63,18 @@ public class Minigolf extends Application {
             }
         }
         return tagatis;
+    }
+
+    public static List<String> listFilesForFolder() {//Tuleb lisada path siia
+        List<String> results = new ArrayList<>();
+        File[] files = new File("C:\\Users\\Peeter Vahe\\Desktop\\Minigolf\\OOPprojekt2\\rajad").listFiles();
+
+        for (File file : files) {
+            if (file.isFile()) {
+                results.add(file.getName());
+            }
+        }
+        return results;
     }
 
     public static void radaFailiks(String rada, Rectangle[][] mänguväljak, int[] algus, int[] lõpp) throws Exception {
@@ -422,6 +429,15 @@ public class Minigolf extends Application {
     public static Scene menüüStseen(Stage primaryStage) throws Exception {
         Group juur = new Group();
         Button play = new Button("Mängi");
+        int kõrgus = 100;
+        int laius = 100;
+        for (int i = 0; i < listFilesForFolder().size() ; i++) {
+            Button nupp = new Button(listFilesForFolder().get(i));
+            nupp.setLayoutX(kõrgus);
+            nupp.setLayoutY(laius);
+            juur.getChildren().add(nupp);
+            laius += 40;
+        }
         play.setOnMouseClicked(mouseEvent -> {
             try {
                 primaryStage.setScene(mänguStseen("test", primaryStage, primaryStage.getScene()));
