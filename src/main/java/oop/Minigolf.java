@@ -27,6 +27,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class Minigolf extends Application {
+
+    static int kordus = 0;
+
     public static Rectangle[][] failMänguväljaks(String rada) throws Exception {
         Rectangle[][] tagatis = new Rectangle[100][100];
         try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
@@ -126,6 +129,15 @@ public class Minigolf extends Application {
     public static Scene mänguStseen(String rada, Stage primaryStage, Scene peamenüü) throws Exception {
         Switch saabvajutada = new Switch();
         Switch pallvees = new Switch();
+        Text skoor = new Text("Skoor: ");
+        skoor.setX(10);
+        skoor.setY(590);
+        Text skoor2 = new Text(Integer.toString(kordus));
+        skoor2.setX(55);
+        skoor2.setY(590);
+        Text parim = new Text("Parim:");
+        parim.setX(10);
+        parim.setY(570);
         Group juur = new Group();
         Rectangle[][] mänguväli = failMänguväljaks("test");
         for (int i = 0; i < mänguväli.length; i++) {
@@ -137,14 +149,16 @@ public class Minigolf extends Application {
         }
         Circle auk = failistAuk("test");
         Pall pall = failistPall("test");
-        juur.getChildren().addAll(auk, pall);
+        juur.getChildren().addAll(auk, pall, skoor, parim, skoor2);
         Scene mängimisSteen = new Scene(juur, 600, 600, Color.BLUE);
-        mängimisSteen.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        mängimisSteen.setOnMouseClicked(new EventHandler<>() {
             @Override
             public void handle(MouseEvent event) {
                 if (saabvajutada.isaBoolean()) {
                     saabvajutada.setaBoolean(false);
                     pallvees.setaBoolean(false);
+                    kordus++;
+                    skoor2.setText(String.valueOf(kordus));
                     double[] alguspunkt = {pall.getCenterX(), pall.getCenterY()};
                     double[] sihtmärk = {event.getSceneX(), event.getSceneY()};
                     pall.setKiirus_x(0.05 * (sihtmärk[0] - pall.getCenterX()));
@@ -175,6 +189,7 @@ public class Minigolf extends Application {
                                             this.stop();
                                             pall.setRadius(6);
                                             primaryStage.setScene(peamenüü);
+                                            kordus = 0;
                                             //kui on augus!
                                         }
                                     }
