@@ -67,11 +67,11 @@ public class Minigolf extends Application {
 
     public static List<String> listFilesForFolder() {//Tuleb lisada path siia
         List<String> results = new ArrayList<>();
-        File[] files = new File("C:\\Users\\Peeter Vahe\\Desktop\\Minigolf\\OOPprojekt2\\rajad").listFiles();
+        File[] files = new File("rajad\\").listFiles();
 
         for (File file : files) {
             if (file.isFile()) {
-                results.add(file.getName());
+                results.add(file.getName().substring(0,file.getName().length()-4));
             }
         }
         return results;
