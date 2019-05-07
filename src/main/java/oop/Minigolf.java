@@ -24,10 +24,11 @@ import java.util.Scanner;
 public class Minigolf extends Application {
 
     static int kordus = 0;
+    static String rajaValik = "test";
 
-    public static Rectangle[][] failMänguväljaks(String rada) throws Exception {
+    public static Rectangle[][] failMänguväljaks() throws Exception {
         Rectangle[][] tagatis = new Rectangle[100][100];
-        try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
+        try (Scanner sc = new Scanner(new File("rajad/" + rajaValik + ".txt"), StandardCharsets.UTF_8)) {
             int rida_arv = 0;
             while (rida_arv < 100) {
                 String rida = sc.nextLine();
@@ -77,8 +78,8 @@ public class Minigolf extends Application {
         return results;
     }
 
-    public static void radaFailiks(String rada, Rectangle[][] mänguväljak, int[] algus, int[] lõpp) throws Exception {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(("rajad/" + rada + ".txt"), StandardCharsets.UTF_8))) {
+    public static void radaFailiks(Rectangle[][] mänguväljak, int[] algus, int[] lõpp) throws Exception {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(("rajad/" + rajaValik + ".txt"), StandardCharsets.UTF_8))) {
             for (int i = 0; i < mänguväljak.length; i++) {
                 StringBuilder rida = new StringBuilder();
                 for (int j = 0; j < mänguväljak[i].length; j++) {
@@ -105,9 +106,9 @@ public class Minigolf extends Application {
 
     }
 
-    public static Pall failistPall(String rada) throws Exception {
+    public static Pall failistPall() throws Exception {
         Pall pall;
-        try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
+        try (Scanner sc = new Scanner(new File("rajad/" + rajaValik + ".txt"), StandardCharsets.UTF_8)) {
             int rida_arv = 0;
             while (rida_arv < 100) {
                 sc.nextLine();
@@ -119,9 +120,9 @@ public class Minigolf extends Application {
         return pall;
     }
 
-    public static Circle failistAuk(String rada) throws Exception {
+    public static Circle failistAuk() throws Exception {
         Circle auk;
-        try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
+        try (Scanner sc = new Scanner(new File("rajad/" + rajaValik + ".txt"), StandardCharsets.UTF_8)) {
             int rida_arv = 0;
             while (rida_arv < 100) {
                 sc.nextLine();
@@ -133,7 +134,7 @@ public class Minigolf extends Application {
         return auk;
     }
 
-    public static Scene mänguStseen(String rada, Stage primaryStage, Scene peamenüü) throws Exception {
+    public static Scene mänguStseen(Stage primaryStage, Scene peamenüü) throws Exception {
         Switch saabvajutada = new Switch();
         Switch pallvees = new Switch();
         Text skoor = new Text("Skoor: ");
@@ -146,7 +147,7 @@ public class Minigolf extends Application {
         parim.setX(10);
         parim.setY(570);
         Group juur = new Group();
-        Rectangle[][] mänguväli = failMänguväljaks("test");
+        Rectangle[][] mänguväli = failMänguväljaks();
         for (int i = 0; i < mänguväli.length; i++) {
             for (int j = 0; j < mänguväli[i].length; j++) {
                 juur.getChildren().add(mänguväli[i][j]);
@@ -154,8 +155,8 @@ public class Minigolf extends Application {
                 juur.getChildren().get(juur.getChildren().size() - 1).setTranslateY(6 * i);
             }
         }
-        Circle auk = failistAuk("test");
-        Pall pall = failistPall("test");
+        Circle auk = failistAuk();
+        Pall pall = failistPall();
         juur.getChildren().addAll(auk, pall, skoor, parim, skoor2);
         Scene mängimisSteen = new Scene(juur, 600, 600, Color.BLUE);
         mängimisSteen.setOnMouseClicked(new EventHandler<>() {
@@ -361,7 +362,7 @@ public class Minigolf extends Application {
                 int[] aukkord = {(int) Math.round(lõppauk.getCenterX() / 6), (int) Math.round(lõppauk.getCenterY() / 6)};
                 int[] alguskord = {(int) Math.round(alguspunkt.getX() / 6), (int) Math.round(alguspunkt.getY() / 6)};
                 try {
-                    radaFailiks("test", test, alguskord, aukkord);
+                    radaFailiks(test, alguskord, aukkord);
                 } catch (Exception e) {
                     primaryStage.close();
                 }
@@ -436,11 +437,15 @@ public class Minigolf extends Application {
             nupp.setLayoutX(kõrgus);
             nupp.setLayoutY(laius);
             juur.getChildren().add(nupp);
+            nupp.setOnMouseClicked(event -> {
+                rajaValik = nupp.getText();
+                System.out.println(rajaValik);
+            });
             laius += 40;
         }
         play.setOnMouseClicked(mouseEvent -> {
             try {
-                primaryStage.setScene(mänguStseen("test", primaryStage, primaryStage.getScene()));
+                primaryStage.setScene(mänguStseen(primaryStage, primaryStage.getScene()));
             } catch (Exception e) {
                 primaryStage.close();
             }
