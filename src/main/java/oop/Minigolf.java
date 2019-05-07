@@ -23,12 +23,13 @@ import java.util.Scanner;
 
 public class Minigolf extends Application {
 
-    static int kordus = 0;
-    static String rajaValik = "test";
+    static private int kordus = 0;
+    static private boolean saabvajutada;
+    static private boolean pallvees;
 
-    public static Rectangle[][] failMänguväljaks() throws Exception {
+    public static Rectangle[][] failMänguväljaks(String rada) throws Exception {
         Rectangle[][] tagatis = new Rectangle[100][100];
-        try (Scanner sc = new Scanner(new File("rajad/" + rajaValik + ".txt"), StandardCharsets.UTF_8)) {
+        try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
             int rida_arv = 0;
             while (rida_arv < 100) {
                 String rida = sc.nextLine();
@@ -78,8 +79,8 @@ public class Minigolf extends Application {
         return results;
     }
 
-    public static void radaFailiks(Rectangle[][] mänguväljak, int[] algus, int[] lõpp) throws Exception {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(("rajad/" + rajaValik + ".txt"), StandardCharsets.UTF_8))) {
+    public static void radaFailiks(Rectangle[][] mänguväljak, int[] algus, int[] lõpp, String rada) throws Exception {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(("rajad/" + rada + ".txt"), StandardCharsets.UTF_8))) {
             for (int i = 0; i < mänguväljak.length; i++) {
                 StringBuilder rida = new StringBuilder();
                 for (int j = 0; j < mänguväljak[i].length; j++) {
@@ -106,9 +107,9 @@ public class Minigolf extends Application {
 
     }
 
-    public static Pall failistPall() throws Exception {
+    public static Pall failistPall(String rada) throws Exception {
         Pall pall;
-        try (Scanner sc = new Scanner(new File("rajad/" + rajaValik + ".txt"), StandardCharsets.UTF_8)) {
+        try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
             int rida_arv = 0;
             while (rida_arv < 100) {
                 sc.nextLine();
@@ -120,9 +121,9 @@ public class Minigolf extends Application {
         return pall;
     }
 
-    public static Circle failistAuk() throws Exception {
+    public static Circle failistAuk(String rada) throws Exception {
         Circle auk;
-        try (Scanner sc = new Scanner(new File("rajad/" + rajaValik + ".txt"), StandardCharsets.UTF_8)) {
+        try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
             int rida_arv = 0;
             while (rida_arv < 100) {
                 sc.nextLine();
@@ -134,9 +135,9 @@ public class Minigolf extends Application {
         return auk;
     }
 
-    public static Scene mänguStseen(Stage primaryStage, Scene peamenüü) throws Exception {
-        Switch saabvajutada = new Switch();
-        Switch pallvees = new Switch();
+    public static Scene mänguStseen(Stage primaryStage, String rada) throws Exception {
+        saabvajutada = true;
+        pallvees = false;
         Text skoor = new Text("Skoor: ");
         skoor.setX(10);
         skoor.setY(590);
@@ -147,7 +148,7 @@ public class Minigolf extends Application {
         parim.setX(10);
         parim.setY(570);
         Group juur = new Group();
-        Rectangle[][] mänguväli = failMänguväljaks();
+        Rectangle[][] mänguväli = failMänguväljaks(rada);
         for (int i = 0; i < mänguväli.length; i++) {
             for (int j = 0; j < mänguväli[i].length; j++) {
                 juur.getChildren().add(mänguväli[i][j]);
@@ -155,16 +156,16 @@ public class Minigolf extends Application {
                 juur.getChildren().get(juur.getChildren().size() - 1).setTranslateY(6 * i);
             }
         }
-        Circle auk = failistAuk();
-        Pall pall = failistPall();
+        Circle auk = failistAuk(rada);
+        Pall pall = failistPall(rada);
         juur.getChildren().addAll(auk, pall, skoor, parim, skoor2);
         Scene mängimisSteen = new Scene(juur, 600, 600, Color.BLUE);
         mängimisSteen.setOnMouseClicked(new EventHandler<>() {
             @Override
             public void handle(MouseEvent event) {
-                if (saabvajutada.isaBoolean()) {
-                    saabvajutada.setaBoolean(false);
-                    pallvees.setaBoolean(false);
+                if (saabvajutada) {
+                    saabvajutada = false;
+                    pallvees = false;
                     kordus++;
                     skoor2.setText(String.valueOf(kordus));
                     double[] alguspunkt = {pall.getCenterX(), pall.getCenterY()};
@@ -178,15 +179,15 @@ public class Minigolf extends Application {
                             double count = 0;
                             mainLoop:
                             while (count < 20) {
-                                if (pallvees.isaBoolean()) {
+                                if (pallvees) {
                                     pall.setRadius(Math.max(0.0, pall.getRadius() - 0.2));
                                     count = 20;
                                     if (pall.getRadius() == 0) {
                                         pall.setRadius(8);
                                         pall.setCenterY(alguspunkt[1]);
                                         pall.setCenterX(alguspunkt[0]);
-                                        pallvees.setaBoolean(false);
-                                        saabvajutada.setaBoolean(true);
+                                        pallvees = false;
+                                        saabvajutada = true;
                                         this.stop();
                                     }
                                 } else {
@@ -196,7 +197,8 @@ public class Minigolf extends Application {
                                         if (Math.abs(pall.getCenterX() - auk.getCenterX()) < 1 && Math.abs(pall.getCenterY() - auk.getCenterY()) < 1) {
                                             this.stop();
                                             pall.setRadius(6);
-                                            primaryStage.setScene(peamenüü);
+                                            try {primaryStage.setScene(menüüStseen(primaryStage));}
+                                            catch (Exception e) { primaryStage.close();}
                                             kordus = 0;
                                             //kui on augus!
                                         }
@@ -266,13 +268,13 @@ public class Minigolf extends Application {
                                     } else if (mänguväli[y][x].getFill().equals(Color.BLUE)) {
                                         pall.setKiirus_x(0);
                                         pall.setKiirus_y(0);
-                                        pallvees.setaBoolean(true);
+                                        pallvees=true;
                                         break;
                                     }
-                                    if (Math.abs(pall.getKiirus_y()) + Math.abs(pall.getKiirus_x()) < 0.03 && !pallvees.isaBoolean()) {
+                                    if (Math.abs(pall.getKiirus_y()) + Math.abs(pall.getKiirus_x()) < 0.03 && !pallvees) {
                                         pall.setKiirus_y(0);
                                         pall.setKiirus_x(0);
-                                        saabvajutada.setaBoolean(true);
+                                        saabvajutada = true;
                                         this.stop();
                                         break;
                                     }
@@ -362,7 +364,7 @@ public class Minigolf extends Application {
                 int[] aukkord = {(int) Math.round(lõppauk.getCenterX() / 6), (int) Math.round(lõppauk.getCenterY() / 6)};
                 int[] alguskord = {(int) Math.round(alguspunkt.getX() / 6), (int) Math.round(alguspunkt.getY() / 6)};
                 try {
-                    radaFailiks(test, alguskord, aukkord);
+                    radaFailiks(test, alguskord, aukkord, "test");
                 } catch (Exception e) {
                     primaryStage.close();
                 }
@@ -430,24 +432,18 @@ public class Minigolf extends Application {
     public static Scene menüüStseen(Stage primaryStage) throws Exception {
         Group juur = new Group();
         Button play = new Button("Mängi");
-        int kõrgus = 100;
-        int laius = 100;
-        for (int i = 0; i < listFilesForFolder().size() ; i++) {
-            Button nupp = new Button(listFilesForFolder().get(i));
-            nupp.setLayoutX(kõrgus);
-            nupp.setLayoutY(laius);
-            juur.getChildren().add(nupp);
-            nupp.setOnMouseClicked(event -> {
-                rajaValik = nupp.getText();
-                System.out.println(rajaValik);
-            });
-            laius += 40;
-        }
+        Scene menüüSteen = new Scene(juur, 600, 600, Color.BLUE);
         play.setOnMouseClicked(mouseEvent -> {
-            try {
-                primaryStage.setScene(mänguStseen(primaryStage, primaryStage.getScene()));
-            } catch (Exception e) {
-                primaryStage.close();
+            juur.getChildren().clear();
+            for (int i = 0; i < listFilesForFolder().size() ; i++) {
+                Button nupp = new Button(listFilesForFolder().get(i));
+                nupp.setLayoutX(300);
+                nupp.setLayoutY(i*40);
+                juur.getChildren().add(nupp);
+                nupp.setOnMouseClicked(event -> {
+                    try {primaryStage.setScene(mänguStseen(primaryStage,  nupp.getText()));}
+                    catch (Exception e) { primaryStage.close();}
+                });
             }
         });
         juur.getChildren().add(play);
@@ -463,7 +459,6 @@ public class Minigolf extends Application {
             }
         });
         juur.getChildren().add(ehita);
-        Scene menüüSteen = new Scene(juur, 600, 600, Color.BLUE);
         return menüüSteen;
     }
 
