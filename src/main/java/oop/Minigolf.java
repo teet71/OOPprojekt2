@@ -8,14 +8,18 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javax.swing.text.html.ImageView;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -136,11 +140,6 @@ public class Minigolf extends Application {
         }
         return parim;
     }
-
-    public static void RekordFaili(String rada, int parim) {
-
-    }
-
     public static Circle failistAuk(String rada) throws Exception {
         Circle auk;
         try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
@@ -185,7 +184,7 @@ public class Minigolf extends Application {
         Circle auk = failistAuk(rada);
         Pall pall = failistPall(rada);
         juur.getChildren().addAll(auk, pall, skoor, parim, skoor2, parim2);
-        Scene mängimisSteen = new Scene(juur, 600, 600, Color.BLUE);
+        Scene mängimisSteen = new Scene(juur, 600, 600, Color.GREEN);
         mängimisSteen.setOnMouseClicked(new EventHandler<>() {
             @Override
             public void handle(MouseEvent event) {
@@ -331,7 +330,7 @@ public class Minigolf extends Application {
         return mängimisSteen;
     }
 
-    public static Scene mapEditorStseen(Stage primaryStage, Scene peamenüü) throws Exception {
+    public static Scene mapEditorStseen(Stage primaryStage, Scene peamenüü){
         Circle lõppauk = new Circle(0, Color.BLACK);
         Text alguspunkt = new Text("P");
         TextField nimi = new TextField();
@@ -345,38 +344,30 @@ public class Minigolf extends Application {
         Button vesi = new Button("vesi");
         vesi.setTranslateX(60);
         vesi.setTranslateY(610);
-        vesi.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent mouseEvent) {
-                pintsel.setFill(Color.BLUE);
-                pintsel.setRadius(0);
-            }
+        vesi.setOnMouseClicked(mouseEvent -> {
+            pintsel.setFill(Color.BLUE);
+            pintsel.setRadius(0);
         });
         Button liiv = new Button("liiv");
         liiv.setTranslateX(110);
         liiv.setTranslateY(610);
-        liiv.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent mouseEvent) {
-                pintsel.setFill(Color.YELLOW);
-                pintsel.setRadius(0);
-            }
+        liiv.setOnMouseClicked(mouseEvent -> {
+            pintsel.setFill(Color.YELLOW);
+            pintsel.setRadius(0);
         });
         Button jää = new Button("jää");
         jää.setTranslateX(10);
         jää.setTranslateY(610);
-        jää.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent mouseEvent) {
-                pintsel.setFill(Color.LIGHTBLUE);
-                pintsel.setRadius(0);
-            }
+        jää.setOnMouseClicked(mouseEvent -> {
+            pintsel.setFill(Color.LIGHTBLUE);
+            pintsel.setRadius(0);
         });
         Button muru = new Button("muru");
         muru.setTranslateX(160);
         muru.setTranslateY(610);
-        muru.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent mouseEvent) {
-                pintsel.setFill(Color.GREEN);
-                pintsel.setRadius(0);
-            }
+        muru.setOnMouseClicked(mouseEvent -> {
+            pintsel.setFill(Color.GREEN);
+            pintsel.setRadius(0);
         });
         Button sein = new Button("sein");
         sein.setTranslateX(210);
@@ -407,7 +398,7 @@ public class Minigolf extends Application {
         juur.getChildren().addAll(vesi, liiv, muru, sein, jää);
         for (int i = 0; i < test.length; i++) {
             for (int j = 0; j < test[i].length; j++) {
-                test[i][j] = new Rectangle(6, 6, Color.BLUE);
+                test[i][j] = new Rectangle(6, 6, Color.GREEN);
             }
         }
         for (int i = 0; i < test.length; i++) {
@@ -456,13 +447,16 @@ public class Minigolf extends Application {
         return radaloomissteen;
     }
 
-    public static Scene menüüStseen(Stage primaryStage) throws Exception {
+    public static Scene menüüStseen(Stage primaryStage){
         Group juur = new Group();
         Button play = new Button("Mängi");
-        Scene menüüSteen = new Scene(juur, 600, 600, Color.BLUE);
+        ImagePattern tagataust = new ImagePattern(new Image("file:cate.jpg")); // sellega saab muuta tagatausta
+        Scene menüüSteen = new Scene(juur, 600, 600, tagataust);
         play.setOnMouseClicked(mouseEvent -> {
             juur.getChildren().clear();
             for (int i = 0; i < listFilesForFolder().size(); i++) {
+                ImagePattern tagataust2 = new ImagePattern(new Image("file:royal.jpg")); // sellega saab muuta tagatausta
+                menüüSteen.setFill(tagataust2);
                 Button nupp = new Button(listFilesForFolder().get(i));
                 nupp.setLayoutX(300);
                 nupp.setLayoutY(i * 40);
@@ -491,13 +485,13 @@ public class Minigolf extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage){
         primaryStage.setTitle("MiniGolf");
         primaryStage.setScene(menüüStseen(primaryStage));
         primaryStage.show();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         launch(args);
 
     }
