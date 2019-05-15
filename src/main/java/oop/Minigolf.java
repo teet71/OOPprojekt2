@@ -297,8 +297,8 @@ public class Minigolf extends Application {
                                         pall.setKiirus_x((pall.getKiirus_x() * 0.995));
                                         pall.setKiirus_y((pall.getKiirus_y() * 0.995));
                                     } else if (mänguväli[y][x].getFill().equals(Color.LIGHTBLUE)) {
-                                        pall.setKiirus_x((pall.getKiirus_x() * 1.002));
-                                        pall.setKiirus_y((pall.getKiirus_y() * 1.002));
+                                        pall.setKiirus_x((pall.getKiirus_x() * 0.9999));
+                                        pall.setKiirus_y((pall.getKiirus_y() * 0.9999));
                                     } else if (mänguväli[y][x].getFill().equals(Color.BLUE)) {
                                         pall.setKiirus_x(0);
                                         pall.setKiirus_y(0);
