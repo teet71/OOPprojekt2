@@ -1,7 +1,7 @@
 package oop;
 
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -17,8 +17,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,6 +31,7 @@ public class Minigolf extends Application {
     static private int kordus = 0;
     static private boolean saabvajutada;
     static private boolean pallvees;
+    static private boolean pallsees;
 
     public static Rectangle[][] failMänguväljaks(String rada) throws Exception {
         Rectangle[][] tagatis = new Rectangle[100][100];
@@ -154,6 +158,7 @@ public class Minigolf extends Application {
     public static Scene mänguStseen(Stage primaryStage, String rada) throws Exception {
         saabvajutada = true;
         pallvees = false;
+        pallsees = false;
         Text skoor = new Text("Skoor: ");
         skoor.setX(10);
         skoor.setY(590);
@@ -201,7 +206,28 @@ public class Minigolf extends Application {
                             double count = 0;
                             mainLoop:
                             while (count < 20) {
-                                if (pallvees) {
+                                if (pallsees) {
+                                    this.stop();
+                                    LocalDateTime aeg = LocalDateTime.now();
+                                    while (LocalDateTime.now().getSecond()-aeg.getSecond()<1.2){
+                                    }
+                                    try {
+                                        primaryStage.setScene(menüüStseen(primaryStage));
+                                    } catch (Exception e) {
+                                        primaryStage.close();
+                                    }
+
+                                    try {
+                                        if (kordus < Integer.parseInt(failistRekord(rada))||Integer.parseInt(failistRekord(rada))==0) {
+                                            radaFailiks(failMänguväljaks(rada), failistPall(rada), failistAuk(rada), rada, kordus);
+                                        }
+                                    } catch (Exception e) {
+                                        primaryStage.close();
+                                    }
+                                    kordus = 0;
+                                    break mainLoop;
+                                }
+                                else if (pallvees) {
                                     pall.setRadius(Math.max(0.0, pall.getRadius() - 0.2));
                                     count = 20;
                                     if (pall.getRadius() == 0) {
@@ -213,28 +239,13 @@ public class Minigolf extends Application {
                                         this.stop();
                                     }
                                 } else {
-                                    if (Math.abs(pall.getCenterX() - auk.getCenterX()) < 12 && Math.abs(pall.getCenterY() - auk.getCenterY()) < 12) {
-                                        pall.setKiirus_x(pall.getKiirus_x() + 0.001 * (auk.getCenterX() - pall.getCenterX()));
-                                        pall.setKiirus_y(pall.getKiirus_y() + 0.001 * (auk.getCenterY() - pall.getCenterY()));
-                                        if (Math.abs(pall.getCenterX() - auk.getCenterX()) < 1 && Math.abs(pall.getCenterY() - auk.getCenterY()) < 1) {
-                                            this.stop();
-                                            pall.setRadius(6);
-                                            try {
-                                                primaryStage.setScene(menüüStseen(primaryStage));
-                                            } catch (Exception e) {
-                                                primaryStage.close();
-                                            }
-
-                                            try {
-                                                if (kordus < Integer.parseInt(failistRekord(rada))||Integer.parseInt(failistRekord(rada))==0) {
-                                                    radaFailiks(failMänguväljaks(rada), failistPall(rada), failistAuk(rada), rada, kordus);
-                                                }
-                                            } catch (Exception e) {
-                                                primaryStage.close();
-                                            }
-                                            kordus = 0;
+                                    if (Math.abs(pall.getCenterX() - auk.getCenterX()) < 11 && Math.abs(pall.getCenterY() - auk.getCenterY()) < 11) {
+                                        pall.setKiirus_x(pall.getKiirus_x() + 0.0003 * (auk.getCenterX() - pall.getCenterX())*(Math.abs(auk.getCenterX() - pall.getCenterX())));
+                                        pall.setKiirus_y(pall.getKiirus_y() + 0.0003 * (auk.getCenterY() - pall.getCenterY())*(Math.abs(auk.getCenterY() - pall.getCenterY())));
+                                        if (Math.abs(pall.getCenterX() - auk.getCenterX()) < 2 && Math.abs(pall.getCenterY() - auk.getCenterY()) < 2) {
+                                            pall.setRadius(6.8);
+                                            pallsees = true;
                                             break mainLoop;
-                                            //kui on augus!
                                         }
                                     }
                                     int x = (int) Math.round((pall.getCenterX() - 3) / 6);
@@ -297,15 +308,15 @@ public class Minigolf extends Application {
                                         pall.setKiirus_x((pall.getKiirus_x() * 0.995));
                                         pall.setKiirus_y((pall.getKiirus_y() * 0.995));
                                     } else if (mänguväli[y][x].getFill().equals(Color.LIGHTBLUE)) {
-                                        pall.setKiirus_x((pall.getKiirus_x() * 0.9999));
-                                        pall.setKiirus_y((pall.getKiirus_y() * 0.9999));
+                                        pall.setKiirus_x((pall.getKiirus_x() * 0.9995));
+                                        pall.setKiirus_y((pall.getKiirus_y() * 0.9995));
                                     } else if (mänguväli[y][x].getFill().equals(Color.BLUE)) {
                                         pall.setKiirus_x(0);
                                         pall.setKiirus_y(0);
                                         pallvees = true;
                                         break;
                                     }
-                                    if (Math.abs(pall.getKiirus_y()) + Math.abs(pall.getKiirus_x()) < 0.03 && !pallvees) {
+                                    if (Math.abs(pall.getKiirus_y()) + Math.abs(pall.getKiirus_x()) < 0.06 && !pallvees) {
                                         pall.setKiirus_y(0);
                                         pall.setKiirus_x(0);
                                         saabvajutada = true;
@@ -386,8 +397,10 @@ public class Minigolf extends Application {
         finish.setTranslateY(610);
         finish.setOnMouseClicked(mouseEvent -> {
             try {
-                radaFailiks(test, new Pall(alguspunkt.getX(), alguspunkt.getY(), 4, Color.WHITE), lõppauk, nimi.getText(), 0);
+                if ((alguspunkt.getX()==0&&alguspunkt.getY()==0)||(lõppauk.getCenterX()==0&&lõppauk.getCenterY()==0)||nimi.getText().equals("")) throw new PoolikRadaException("VIGA! Teie rajal puudus algus, lõpp või nimi!");
+                else radaFailiks(test, new Pall(alguspunkt.getX(), alguspunkt.getY(), 4, Color.WHITE), lõppauk, nimi.getText(), 0);
             } catch (Exception e) {
+                System.out.println(e.getMessage());
                 primaryStage.close();
             }
             primaryStage.setScene(peamenüü);
@@ -471,7 +484,7 @@ public class Minigolf extends Application {
             }
         });
         juur.getChildren().add(play);
-        Button ehita = new Button("ehita");
+        Button ehita = new Button("Ehita");
         ehita.setTranslateX(360);
         ehita.setTranslateY(425);
         ehita.setOnMouseClicked(mouseEvent -> {
