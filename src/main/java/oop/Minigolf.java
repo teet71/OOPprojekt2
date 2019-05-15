@@ -10,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BackgroundImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -18,8 +17,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import javax.swing.text.html.ImageView;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -450,15 +447,17 @@ public class Minigolf extends Application {
     public static Scene menüüStseen(Stage primaryStage){
         Group juur = new Group();
         Button play = new Button("Mängi");
-        ImagePattern tagataust = new ImagePattern(new Image("file:cate.jpg")); // sellega saab muuta tagatausta
+        play.setTranslateX(280);
+        play.setTranslateY(425);
+        ImagePattern tagataust = new ImagePattern(new Image("file:tiddies.jpg")); // sellega saab muuta tagatausta
         Scene menüüSteen = new Scene(juur, 600, 600, tagataust);
         play.setOnMouseClicked(mouseEvent -> {
             juur.getChildren().clear();
             for (int i = 0; i < listFilesForFolder().size(); i++) {
-                ImagePattern tagataust2 = new ImagePattern(new Image("file:royal.jpg")); // sellega saab muuta tagatausta
+                ImagePattern tagataust2 = new ImagePattern(new Image("file:cate.jpg")); // sellega saab muuta tagatausta
                 menüüSteen.setFill(tagataust2);
                 Button nupp = new Button(listFilesForFolder().get(i));
-                nupp.setLayoutX(300);
+                nupp.setLayoutX(50);
                 nupp.setLayoutY(i * 40);
                 juur.getChildren().add(nupp);
                 nupp.setOnMouseClicked(event -> {
@@ -472,7 +471,8 @@ public class Minigolf extends Application {
         });
         juur.getChildren().add(play);
         Button ehita = new Button("ehita");
-        ehita.setTranslateX(300);
+        ehita.setTranslateX(360);
+        ehita.setTranslateY(425);
         ehita.setOnMouseClicked(mouseEvent -> {
             try {
                 primaryStage.setScene(mapEditorStseen(primaryStage, primaryStage.getScene()));
