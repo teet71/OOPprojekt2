@@ -20,16 +20,14 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Minigolf extends Application {
 
     static private int kordus = 0;
-    //static private int parimArv = 0;
     static private boolean saabvajutada;
     static private boolean pallvees;
-    //static private Map<String, Integer> highScore;
+
     public static Rectangle[][] failMänguväljaks(String rada) throws Exception {
         Rectangle[][] tagatis = new Rectangle[100][100];
         try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
@@ -105,8 +103,8 @@ public class Minigolf extends Application {
                 bw.write(rida.toString());
                 bw.newLine();
             }
-            bw.write((int)algus.getCenterX()/6 + " " + (int)algus.getCenterY()/6 + " "
-                    + (int)lõpp.getCenterX()/6 + " " + (int)lõpp.getCenterY()/6 + " " + rekord);
+            bw.write((int) algus.getCenterX() / 6 + " " + (int) algus.getCenterY() / 6 + " "
+                    + (int) lõpp.getCenterX() / 6 + " " + (int) lõpp.getCenterY() / 6 + " " + rekord);
         }
 
     }
@@ -139,7 +137,7 @@ public class Minigolf extends Application {
         return parim;
     }
 
-    public static void RekordFaili(String rada, int parim){
+    public static void RekordFaili(String rada, int parim) {
 
     }
 
@@ -228,12 +226,13 @@ public class Minigolf extends Application {
                                             } catch (Exception e) {
                                                 primaryStage.close();
                                             }
-                                            /*try {
-                                                int[]a = {failistPall(rada).getCenterX(),failistPall(rada).getCenterY()};
-                                                radaFailiks(failMänguväljaks(rada),failistPall(rada).get,failistAuk(rada),rada,1);
+                                            try {
+                                                if (kordus < Integer.parseInt(failistRekord(rada))) {
+                                                    radaFailiks(failMänguväljaks(rada), failistPall(rada), failistAuk(rada), rada, kordus);
+                                                }
                                             } catch (Exception e) {
                                                 primaryStage.close();
-                                            }*/
+                                            }
                                             kordus = 0;
                                             //kui on augus!
                                         }
@@ -395,7 +394,7 @@ public class Minigolf extends Application {
         finish.setTranslateY(610);
         finish.setOnMouseClicked(mouseEvent -> {
             try {
-                radaFailiks(test, new Pall(algus.getTranslateX(),algus.getTranslateY(),4, Color.WHITE), lõppauk, nimi.getText(), 0);
+                radaFailiks(test, new Pall(alguspunkt.getX(), alguspunkt.getY(), 4, Color.WHITE), lõppauk, nimi.getText(), 100);
             } catch (Exception e) {
                 primaryStage.close();
             }
