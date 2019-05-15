@@ -167,7 +167,9 @@ public class Minigolf extends Application {
         Text parim = new Text("Parim:");
         parim.setX(10);
         parim.setY(570);
-        Text parim2 = new Text(failistRekord(rada));
+        Text parim2 = new Text();
+        if (failistRekord(rada).equals("0")) parim2.setText("puudub");
+        else parim2.setText(failistRekord(rada));
         parim2.setX(55);
         parim2.setY(570);
         Group juur = new Group();
@@ -226,14 +228,16 @@ public class Minigolf extends Application {
                                             } catch (Exception e) {
                                                 primaryStage.close();
                                             }
+
                                             try {
-                                                if (kordus < Integer.parseInt(failistRekord(rada))) {
+                                                if (kordus < Integer.parseInt(failistRekord(rada))||Integer.parseInt(failistRekord(rada))==0) {
                                                     radaFailiks(failMänguväljaks(rada), failistPall(rada), failistAuk(rada), rada, kordus);
                                                 }
                                             } catch (Exception e) {
                                                 primaryStage.close();
                                             }
                                             kordus = 0;
+                                            break mainLoop;
                                             //kui on augus!
                                         }
                                     }
@@ -394,7 +398,7 @@ public class Minigolf extends Application {
         finish.setTranslateY(610);
         finish.setOnMouseClicked(mouseEvent -> {
             try {
-                radaFailiks(test, new Pall(alguspunkt.getX(), alguspunkt.getY(), 4, Color.WHITE), lõppauk, nimi.getText(), 100);
+                radaFailiks(test, new Pall(alguspunkt.getX(), alguspunkt.getY(), 4, Color.WHITE), lõppauk, nimi.getText(), 0);
             } catch (Exception e) {
                 primaryStage.close();
             }
