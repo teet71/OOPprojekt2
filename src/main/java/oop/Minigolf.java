@@ -451,6 +451,7 @@ public class Minigolf extends Application {
         play.setTranslateY(425);
         ImagePattern tagataust = new ImagePattern(new Image("file:tiddies.jpg")); // sellega saab muuta tagatausta
         Scene menüüSteen = new Scene(juur, 600, 600, tagataust);
+        primaryStage.setResizable(false);
         play.setOnMouseClicked(mouseEvent -> {
             juur.getChildren().clear();
             for (int i = 0; i < listFilesForFolder().size(); i++) {
