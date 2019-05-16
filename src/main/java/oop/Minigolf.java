@@ -356,9 +356,15 @@ public class Minigolf extends Application {
         fill.setTranslateX(410);
         fill.setTranslateY(610);
         fill.setOnMouseClicked(mouseEvent -> {
-            pintsel.setRadius(10);
-            if (fill.getText().equals("fill")) fill.setText("fill off");
-            else fill.setText("fill");
+
+            if (fill.getText().equals("fill")){
+                fill.setText("fill off");
+                pintsel.setRadius(10);
+            }
+            else {
+                fill.setText("fill");
+                pintsel.setRadius(0);
+            }
         });
         vesi.setTranslateX(60);
         vesi.setTranslateY(610);
@@ -452,6 +458,7 @@ public class Minigolf extends Application {
         radaloomissteen.setOnMouseClicked(event -> {
             int x = (int) Math.round(event.getSceneX() / 6);
             int y = (int) Math.round(event.getSceneY() / 6);
+            if (x<100&&y<100){
             if (pintsel.getRadius() == 2) {
                 alguspunkt.setText("S");
                 alguspunkt.setX(x * 6);
@@ -470,7 +477,7 @@ public class Minigolf extends Application {
             else if (pintsel.getRadius() == 10 && !(pintsel.getFill().equals(test[y][x].getFill()))) {
                 fill(test, pintsel.getFill(),test[y][x].getFill(), y, x);
             }
-        });
+        }});
         return radaloomissteen;
     }
     public static void fill(Rectangle[][] väljak, Paint värv, Paint alusvärv, int i, int j){
