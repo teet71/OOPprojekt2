@@ -208,6 +208,15 @@ public class Minigolf extends Application {
                             double count = 0;
                             mainLoop:
                             while (count < 20) {
+                                try {
+                                if (pall.getCenterY()<-3||pall.getCenterY()>603||pall.getCenterX()<-3||pall.getCenterX()>603) {
+                                    throw new PallVäljasMapistException("Pall sattus väljas poole rada!");
+                                }}
+                                catch (PallVäljasMapistException e) {
+                                        System.out.println(e.getMessage());
+                                        primaryStage.close();
+                                        break mainLoop;
+                                    }
                                 if (pallsees) {
                                     this.stop();
                                     LocalDateTime aeg = LocalDateTime.now();
