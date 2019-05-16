@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Minigolf extends Application {
 
@@ -190,7 +192,7 @@ public class Minigolf extends Application {
         mängimisSteen.setOnMouseClicked(new EventHandler<>() {
             @Override
             public void handle(MouseEvent event) {
-                if (saabvajutada) {
+                if (saabvajutada&&!pallsees) {
                     saabvajutada = false;
                     pallvees = false;
                     kordus++;
@@ -350,40 +352,54 @@ public class Minigolf extends Application {
         Group juur = new Group();
         Rectangle[][] test = new Rectangle[100][100];
         Button vesi = new Button("vesi");
+        Button fill = new Button("fill");
+        fill.setTranslateX(410);
+        fill.setTranslateY(610);
+        fill.setOnMouseClicked(mouseEvent -> {
+            pintsel.setRadius(10);
+            if (fill.getText().equals("fill")) fill.setText("fill off");
+            else fill.setText("fill");
+        });
         vesi.setTranslateX(60);
         vesi.setTranslateY(610);
         vesi.setOnMouseClicked(mouseEvent -> {
             pintsel.setFill(Color.BLUE);
-            pintsel.setRadius(0);
+            if (fill.getText().equals("fill")) pintsel.setRadius(0);
+            else pintsel.setRadius(10);
         });
         Button liiv = new Button("liiv");
         liiv.setTranslateX(110);
         liiv.setTranslateY(610);
         liiv.setOnMouseClicked(mouseEvent -> {
             pintsel.setFill(Color.YELLOW);
-            pintsel.setRadius(0);
+            if (fill.getText().equals("fill")) pintsel.setRadius(0);
+            else pintsel.setRadius(10);
         });
         Button jää = new Button("jää");
         jää.setTranslateX(10);
         jää.setTranslateY(610);
         jää.setOnMouseClicked(mouseEvent -> {
             pintsel.setFill(Color.LIGHTBLUE);
-            pintsel.setRadius(0);
+            if (fill.getText().equals("fill")) pintsel.setRadius(0);
+            else pintsel.setRadius(10);
         });
         Button muru = new Button("muru");
         muru.setTranslateX(160);
         muru.setTranslateY(610);
         muru.setOnMouseClicked(mouseEvent -> {
             pintsel.setFill(Color.GREEN);
-            pintsel.setRadius(0);
+            if (fill.getText().equals("fill")) pintsel.setRadius(0);
+            else pintsel.setRadius(10);
         });
         Button sein = new Button("sein");
         sein.setTranslateX(210);
         sein.setTranslateY(610);
         sein.setOnMouseClicked(mouseEvent -> {
             pintsel.setFill(Color.GRAY);
-            pintsel.setRadius(0);
+            if (fill.getText().equals("fill")) pintsel.setRadius(0);
+            else pintsel.setRadius(10);
         });
+
         Button auk = new Button("auk");
         auk.setTranslateX(260);
         auk.setTranslateY(610);
@@ -418,8 +434,7 @@ public class Minigolf extends Application {
                 juur.getChildren().get(juur.getChildren().size() - 1).setTranslateY(6 * i);
             }
         }
-        juur.getChildren().addAll(auk, algus, finish, nimi);
-        juur.getChildren().addAll(lõppauk, alguspunkt);
+        juur.getChildren().addAll(auk, algus, finish, nimi, fill, lõppauk, alguspunkt);
         Scene radaloomissteen = new Scene(juur, 600, 650, Color.SNOW);
         radaloomissteen.setOnMouseDragged(event -> {
             int x = (int) Math.round(event.getSceneX() / 6);
@@ -452,24 +467,65 @@ public class Minigolf extends Application {
                     }
                 }
             }
+            else if (pintsel.getRadius() == 10 && !(pintsel.getFill().equals(test[y][x].getFill()))) {
+                fill(test, pintsel.getFill(),test[y][x].getFill(), y, x);
+            }
         });
-
         return radaloomissteen;
     }
+    public static void fill(Rectangle[][] väljak, Paint värv, Paint alusvärv, int i, int j){
+        Stack<int[]> blocks = new Stack<int[]>();
+        int[] temp = {i, j};
+        blocks.push(temp);
+        while (!(blocks.isEmpty())){
+            temp = blocks.pop();
+            fill_abi(väljak, värv, alusvärv,temp[0], temp[1], blocks);
+        }
+    }
+    public static void fill_abi(Rectangle[][] väljak, Paint värv, Paint alusvärv, int i, int j, Stack<int[]> blocks){
+            if (i > 0) {
+                if (väljak[i - 1][j].getFill().equals(alusvärv)) {
+                    väljak[i - 1][j].setFill(värv);
+                    int[] temp= {i-1,j};
+                    blocks.push(temp);
+                }
+            }
+            if (j > 0) {
+                if (väljak[i][j-1].getFill().equals(alusvärv)) {
+                    väljak[i][j-1].setFill(värv);
+                    int[] temp= {i,j-1};
+                    blocks.push(temp);
+                }
+            }
+            if (i < 99) {
+                if (väljak[i + 1][j].getFill().equals(alusvärv)){
+                    väljak[i + 1][j].setFill(värv);
+                    int[] temp= {i+1,j};
+                    blocks.push(temp);
+                }
+            }
+            if (j < 99) {
+                if (väljak[i][j + 1].getFill().equals(alusvärv)){
+                    väljak[i][j+1].setFill(värv);
+                    int[] temp= {i,j+1};
+                    blocks.push(temp);
+                }
+            }
+        }
 
     public static Scene menüüStseen(Stage primaryStage){
         Group juur = new Group();
         Button play = new Button("Mängi");
         play.setTranslateX(280);
         play.setTranslateY(425);
-        ImagePattern tagataust = new ImagePattern(new Image("file:tiddies.jpg")); // sellega saab muuta tagatausta
-        Scene menüüSteen = new Scene(juur, 600, 600, tagataust);
+        //ImagePattern tagataust = new ImagePattern(new Image("file:tiddies.jpg")); // sellega saab muuta tagatausta
+        Scene menüüSteen = new Scene(juur, 600, 600, Color.SNOW);
         primaryStage.setResizable(false);
         play.setOnMouseClicked(mouseEvent -> {
             juur.getChildren().clear();
             for (int i = 0; i < listFilesForFolder().size(); i++) {
-                ImagePattern tagataust2 = new ImagePattern(new Image("file:cate.jpg")); // sellega saab muuta tagatausta
-                menüüSteen.setFill(tagataust2);
+                //ImagePattern tagataust2 = new ImagePattern(new Image("file:cate.jpg")); // sellega saab muuta tagatausta
+                //menüüSteen.setFill(tagataust2);
                 Button nupp = new Button(listFilesForFolder().get(i));
                 nupp.setLayoutX(50);
                 nupp.setLayoutY(i * 40);
