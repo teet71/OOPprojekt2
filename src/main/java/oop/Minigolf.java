@@ -362,7 +362,7 @@ public class Minigolf extends Application {
         Rectangle[][] test = new Rectangle[100][100];
         Button vesi = new Button("vesi");
         Button fill = new Button("fill");
-        fill.setTranslateX(410);
+        fill.setTranslateX(100);
         fill.setTranslateY(610);
         fill.setOnMouseClicked(mouseEvent -> {
 
@@ -375,7 +375,7 @@ public class Minigolf extends Application {
                 pintsel.setRadius(0);
             }
         });
-        vesi.setTranslateX(60);
+        vesi.setTranslateX(155);
         vesi.setTranslateY(610);
         vesi.setOnMouseClicked(mouseEvent -> {
             pintsel.setFill(Color.BLUE);
@@ -383,7 +383,7 @@ public class Minigolf extends Application {
             else pintsel.setRadius(10);
         });
         Button liiv = new Button("liiv");
-        liiv.setTranslateX(110);
+        liiv.setTranslateX(195);
         liiv.setTranslateY(610);
         liiv.setOnMouseClicked(mouseEvent -> {
             pintsel.setFill(Color.YELLOW);
@@ -391,7 +391,7 @@ public class Minigolf extends Application {
             else pintsel.setRadius(10);
         });
         Button jää = new Button("jää");
-        jää.setTranslateX(10);
+        jää.setTranslateX(270);
         jää.setTranslateY(610);
         jää.setOnMouseClicked(mouseEvent -> {
             pintsel.setFill(Color.LIGHTBLUE);
@@ -399,7 +399,7 @@ public class Minigolf extends Application {
             else pintsel.setRadius(10);
         });
         Button muru = new Button("muru");
-        muru.setTranslateX(160);
+        muru.setTranslateX(305);
         muru.setTranslateY(610);
         muru.setOnMouseClicked(mouseEvent -> {
             pintsel.setFill(Color.GREEN);
@@ -407,7 +407,7 @@ public class Minigolf extends Application {
             else pintsel.setRadius(10);
         });
         Button sein = new Button("sein");
-        sein.setTranslateX(210);
+        sein.setTranslateX(230);
         sein.setTranslateY(610);
         sein.setOnMouseClicked(mouseEvent -> {
             pintsel.setFill(Color.GRAY);
@@ -416,15 +416,15 @@ public class Minigolf extends Application {
         });
 
         Button auk = new Button("auk");
-        auk.setTranslateX(260);
+        auk.setTranslateX(60);
         auk.setTranslateY(610);
         auk.setOnMouseClicked(mouseEvent -> pintsel.setRadius(1));
         Button algus = new Button("algus");
-        algus.setTranslateX(310);
+        algus.setTranslateX(10);
         algus.setTranslateY(610);
         algus.setOnMouseClicked(mouseEvent -> pintsel.setRadius(2));
-        Button finish = new Button("finish");
-        finish.setTranslateX(360);
+        Button finish = new Button("salvesta");
+        finish.setTranslateX(385);
         finish.setTranslateY(610);
         finish.setOnMouseClicked(mouseEvent -> {
             try {
