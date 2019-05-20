@@ -174,7 +174,7 @@ public class Minigolf extends Application {
         parim.setX(10);
         parim.setY(570);
         Text parim2 = new Text();
-        if (failistRekord(rada).equals("0")) parim2.setText("puudub");
+        if (failistRekord(rada).equals("0")) parim2.setText("-");
         else parim2.setText(failistRekord(rada));
         parim2.setX(55);
         parim2.setY(570);
