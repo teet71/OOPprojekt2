@@ -161,6 +161,9 @@ public class Minigolf extends Application {
         saabvajutada = true;
         pallvees = false;
         pallsees = false;
+        Rectangle skooriTaust = new Rectangle(80,45, Color.WHITE);
+        skooriTaust.setX(0);
+        skooriTaust.setY(555);
         Text skoor = new Text("Skoor: ");
         skoor.setX(10);
         skoor.setY(590);
@@ -187,7 +190,7 @@ public class Minigolf extends Application {
         }
         Circle auk = failistAuk(rada);
         Pall pall = failistPall(rada);
-        juur.getChildren().addAll(auk, pall, skoor, parim, skoor2, parim2);
+        juur.getChildren().addAll(auk, pall,skooriTaust, skoor, parim, skoor2, parim2);
         Scene mängimisSteen = new Scene(juur, 600, 600, Color.GREEN);
         mängimisSteen.setOnMouseClicked(new EventHandler<>() {
             @Override
