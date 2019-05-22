@@ -35,7 +35,7 @@ public class Minigolf extends Application {
     static private boolean pallvees;
     static private boolean pallsees;
 
-    public static Rectangle[][] failMänguväljaks(String rada) throws Exception {
+    public static Rectangle[][] failMänguväljaks(String rada) throws Exception { //Saab faili nime ja tagastab mänguvälja
         Rectangle[][] tagatis = new Rectangle[100][100];
         try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
             int rida_arv = 0;
@@ -75,7 +75,7 @@ public class Minigolf extends Application {
         return tagatis;
     }
 
-    public static List<String> listFilesForFolder() {//Tuleb lisada path siia
+    public static List<String> listFilesForFolder() {
         List<String> results = new ArrayList<>();
         File[] files = new File("rajad\\").listFiles();
 
@@ -87,7 +87,7 @@ public class Minigolf extends Application {
         return results;
     }
 
-    public static void radaFailiks(Rectangle[][] mänguväljak, Pall algus, Circle lõpp, String rada, int rekord) throws Exception {
+    public static void radaFailiks(Rectangle[][] mänguväljak, Pall algus, Circle lõpp, String rada, int rekord) throws Exception { //tekitab faili
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(("rajad/" + rada + ".txt"), StandardCharsets.UTF_8))) {
             for (int i = 0; i < mänguväljak.length; i++) {
                 StringBuilder rida = new StringBuilder();
@@ -116,7 +116,7 @@ public class Minigolf extends Application {
 
     }
 
-    public static Pall failistPall(String rada) throws Exception {
+    public static Pall failistPall(String rada) throws Exception { //saab failist palli koordinaadid ja tekitab vastava palli
         Pall pall;
         try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
             int rida_arv = 0;
@@ -130,7 +130,7 @@ public class Minigolf extends Application {
         return pall;
     }
 
-    public static String failistRekord(String rada) throws Exception {
+    public static String failistRekord(String rada) throws Exception { //saab failist raja rekordi
         String parim;
         try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
             int rida_arv = 0;
@@ -143,7 +143,7 @@ public class Minigolf extends Application {
         }
         return parim;
     }
-    public static Circle failistAuk(String rada) throws Exception {
+    public static Circle failistAuk(String rada) throws Exception { //saab failist lõppaugu
         Circle auk;
         try (Scanner sc = new Scanner(new File("rajad/" + rada + ".txt"), StandardCharsets.UTF_8)) {
             int rida_arv = 0;
@@ -157,7 +157,7 @@ public class Minigolf extends Application {
         return auk;
     }
 
-    public static Scene mänguStseen(Stage primaryStage, String rada) throws Exception {
+    public static Scene mänguStseen(Stage primaryStage, String rada) throws Exception { //loob stseeni, kus saab rajal mängida
         saabvajutada = true;
         pallvees = false;
         pallsees = false;
@@ -192,9 +192,9 @@ public class Minigolf extends Application {
         Pall pall = failistPall(rada);
         juur.getChildren().addAll(auk, pall,skooriTaust, skoor, parim, skoor2, parim2);
         Scene mängimisSteen = new Scene(juur, 600, 600, Color.GREEN);
-        mängimisSteen.setOnMouseClicked(new EventHandler<>() {
+        mängimisSteen.setOnMouseClicked(new EventHandler<>() { //kui palli lüüakse
             @Override
-            public void handle(MouseEvent event) {
+            public void handle(MouseEvent event) { //siin toimub palliliikumise füüsika
                 if (saabvajutada&&!pallsees) {
                     saabvajutada = false;
                     pallvees = false;
@@ -202,7 +202,7 @@ public class Minigolf extends Application {
                     skoor2.setText(String.valueOf(kordus));
                     double[] alguspunkt = {pall.getCenterX(), pall.getCenterY()};
                     double[] sihtmärk = {event.getSceneX(), event.getSceneY()};
-                    pall.setKiirus_x(0.05 * (sihtmärk[0] - pall.getCenterX()));
+                    pall.setKiirus_x(0.05 * (sihtmärk[0] - pall.getCenterX())); //antakse pallile vastab kiirus
                     pall.setKiirus_y(0.05 * (sihtmärk[1] - pall.getCenterY()));
                     AnimationTimer timer = new AnimationTimer() {
                         @Override
@@ -210,7 +210,7 @@ public class Minigolf extends Application {
                         public void handle(long now) {
                             double count = 0;
                             mainLoop:
-                            while (count < 20) {
+                            while (count < 20) { //loop, et collision dedection oleks parem
                                 try {
                                 if (pall.getCenterY()<-3||pall.getCenterY()>603||pall.getCenterX()<-3||pall.getCenterX()>603) {
                                     throw new PallVäljasMapistException("Pall sattus väljas poole rada!");
@@ -253,7 +253,7 @@ public class Minigolf extends Application {
                                         this.stop();
                                     }
                                 } else {
-                                    if (Math.abs(pall.getCenterX() - auk.getCenterX()) < 11 && Math.abs(pall.getCenterY() - auk.getCenterY()) < 11) {
+                                    if (Math.abs(pall.getCenterX() - auk.getCenterX()) < 11 && Math.abs(pall.getCenterY() - auk.getCenterY()) < 11) { //pall augu juures
                                         pall.setKiirus_x(pall.getKiirus_x() + 0.0003 * (auk.getCenterX() - pall.getCenterX())*(Math.abs(auk.getCenterX() - pall.getCenterX())));
                                         pall.setKiirus_y(pall.getKiirus_y() + 0.0003 * (auk.getCenterY() - pall.getCenterY())*(Math.abs(auk.getCenterY() - pall.getCenterY())));
                                         if (Math.abs(pall.getCenterX() - auk.getCenterX()) < 2 && Math.abs(pall.getCenterY() - auk.getCenterY()) < 2) {
@@ -272,7 +272,7 @@ public class Minigolf extends Application {
                                     count++;
                                     pall.setCenterY(pall.getCenterY() + (pall.getKiirus_y() * 0.05));
                                     pall.setCenterX(pall.getCenterX() + (pall.getKiirus_x() * 0.05));
-                                    for (int i = x - 5; i < x + 5; i++) {
+                                    for (int i = x - 5; i < x + 5; i++) { //uuritaske palli põrkeid seinaga
                                         for (int j = y - 5; j < y + 5; j++) {
                                             if (mänguväli[j][i].getFill().equals(Color.GRAY)) {
                                                 if (mänguväli[j][i].getBoundsInParent().intersects(pall.getBoundsInParent())) {
@@ -295,7 +295,7 @@ public class Minigolf extends Application {
                                                             angle = 180 + Math.toDegrees(Math.atan(Math.abs(Math.abs(keskloik[0]) / keskloik[1])));
                                                         }
                                                     }
-                                                    if (angle < 45.0 || angle > 315.0 || ((angle > 135) && (angle < 225))) {
+                                                    if (angle < 45.0 || angle > 315.0 || ((angle > 135) && (angle < 225))) { //nurgast vastavalt muudetakse palli suunda
                                                         pall.setKiirus_y(-pall.getKiirus_y() * 0.8);
                                                         pall.setCenterY(pall.getCenterY() + (0.1 * pall.getKiirus_y()));
                                                         pall.setCenterX(pall.getCenterX() - (0.1 * pall.getKiirus_x()));
@@ -315,7 +315,7 @@ public class Minigolf extends Application {
                                     x = Math.max(0, x);
                                     y = Math.min(99, y);
                                     y = Math.max(0, y);
-                                    if (mänguväli[y][x].getFill().equals(Color.GREEN)) {
+                                    if (mänguväli[y][x].getFill().equals(Color.GREEN)) { //vaadatakse, mis ruudul pall ja muudetakse tema kiirust vastavalt
                                         pall.setKiirus_x((pall.getKiirus_x() * 0.999));
                                         pall.setKiirus_y((pall.getKiirus_y() * 0.999));
                                     } else if (mänguväli[y][x].getFill().equals(Color.YELLOW)) {
@@ -330,7 +330,7 @@ public class Minigolf extends Application {
                                         pallvees = true;
                                         break;
                                     }
-                                    if (Math.abs(pall.getKiirus_y()) + Math.abs(pall.getKiirus_x()) < 0.06 && !pallvees) {
+                                    if (Math.abs(pall.getKiirus_y()) + Math.abs(pall.getKiirus_x()) < 0.06 && !pallvees) { //pall peatuma
                                         pall.setKiirus_y(0);
                                         pall.setKiirus_x(0);
                                         saabvajutada = true;
@@ -352,7 +352,7 @@ public class Minigolf extends Application {
         return mängimisSteen;
     }
 
-    public static Scene mapEditorStseen(Stage primaryStage, Scene peamenüü){
+    public static Scene mapEditorStseen(Stage primaryStage, Scene peamenüü){ //mapeditori stseeni loomine
         Circle lõppauk = new Circle(0, Color.BLACK);
         Text alguspunkt = new Text("P");
         TextField nimi = new TextField();
@@ -492,7 +492,7 @@ public class Minigolf extends Application {
         }});
         return radaloomissteen;
     }
-    public static void fill(Rectangle[][] väljak, Paint värv, Paint alusvärv, int i, int j){
+    public static void fill(Rectangle[][] väljak, Paint värv, Paint alusvärv, int i, int j){ //funktsioon, et fillida mapeditoris
         Stack<int[]> blocks = new Stack<int[]>();
         int[] temp = {i, j};
         blocks.push(temp);
